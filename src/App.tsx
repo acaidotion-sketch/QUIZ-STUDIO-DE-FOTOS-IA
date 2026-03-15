@@ -48,6 +48,7 @@ export default function App() {
   });
   const [diagnosis, setDiagnosis] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [timer, setTimer] = useState(600); // 10 minutes
 
   // Gemini Initialization
@@ -112,11 +113,11 @@ export default function App() {
 
   const openPayment = () => {
     window.open('https://loja.infinitepay.io/fenixdigital/mav3162-studio-de-fotos-digital-online-ia', '_blank');
-    setStep(8);
+    setIsProcessingPayment(true);
   };
 
   const redirectToWhatsApp = () => {
-    const message = encodeURIComponent(`Olá! Acabei de fazer o quiz no Studio de Fotos IA.\nNome: ${answers.name}\nObjetivo: ${answers.objective}\nEstilo: ${answers.style}\nQuero minhas fotos profissionais!`);
+    const message = encodeURIComponent(`Olá! Acabei de pagar o Studio de Fotos IA e quero iniciar meu atendimento.`);
     window.open(`https://wa.me/5591981305395?text=${message}`, '_blank');
   };
 
@@ -517,12 +518,38 @@ export default function App() {
                 
                 <button 
                   onClick={openPayment}
-                  disabled={timer <= 0}
+                  disabled={timer <= 0 || isProcessingPayment}
                   className="gold-button w-full flex flex-col items-center py-6"
                 >
-                  <span className="text-lg">PAGAR R$ {finalPrice.replace('.', ',')}</span>
+                  <span className="text-lg">
+                    {isProcessingPayment ? "Pagamento em andamento..." : `PAGAR R$ ${finalPrice.replace('.', ',')}`}
+                  </span>
                   <span className="text-[10px] opacity-80">Pagamento Seguro via InfinitePay</span>
                 </button>
+
+                {isProcessingPayment && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl p-6 text-center space-y-4"
+                  >
+                    <div className="flex justify-center">
+                      <div className="waiting-loader"></div>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-white">Aguardando confirmação do pagamento...</h4>
+                      <p className="text-[11px] text-white/60 mt-1">
+                        Após a confirmação, você será redirecionado automaticamente para o WhatsApp.
+                      </p>
+                    </div>
+                    <button 
+                      onClick={() => setStep(8)}
+                      className="text-[10px] text-accent hover:underline uppercase tracking-widest font-bold"
+                    >
+                      Já paguei — ir para o WhatsApp
+                    </button>
+                  </motion.div>
+                )}
 
                 <div className="flex items-center gap-4 text-[10px] text-white/40 uppercase tracking-widest">
                   <div className="flex items-center gap-1"><ShieldCheck size={12} /> 100% Seguro</div>
