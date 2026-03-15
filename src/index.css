@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@theme {
+  --color-accent: #c8a96e;
+  --color-accent-dim: rgba(200, 169, 110, 0.1);
+  --color-accent-border: rgba(200, 169, 110, 0.3);
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-[#0a0a0a] text-white antialiased;
+  }
+}
+
+.glass-card {
+  @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6;
+}
+
+.gold-button {
+  @apply bg-accent hover:bg-accent/90 text-black font-bold py-4 px-8 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.quiz-option {
+  @apply w-full text-left p-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 hover:border-accent/50 transition-all cursor-pointer;
+}
+
+.proof-images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  @apply gap-2 mb-4;
+}
+
+.proof-img-wrap {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4/5;
+  background: rgba(255, 255, 255, 0.05);
+  min-width: 0;
+  max-width: 100%;
+  @apply rounded-lg;
+}
+
+.proof-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+.quiz-option.selected {
+  @apply border-accent bg-accent/10;
+}
