@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   Camera, 
@@ -21,7 +21,6 @@ import {
   ShieldCheck,
   Clock
 } from 'lucide-react';
-import { GoogleGenAI } from "@google/genai";
 
 // Types
 interface QuizAnswers {
@@ -51,9 +50,6 @@ export default function App() {
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [timer, setTimer] = useState(600); // 10 minutes
 
-  // Gemini Initialization
-  const ai = useMemo(() => new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' }), []);
-
   // Timer for Step 7
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -79,31 +75,15 @@ export default function App() {
   const generateDiagnosis = async () => {
     setIsLoading(true);
     setStep(5);
-    try {
-      const prompt = `
-        Você é um especialista em imagem pessoal e fotografia. 
-        Analise as seguintes respostas de um cliente para o "Studio de Fotos Digital Online IA":
-        - Objetivo: ${answers.objective}
-        - Estilo: ${answers.style}
-        - Frequência de uso: ${answers.frequency}
-        
-        Crie um diagnóstico personalizado curto (máximo 3 parágrafos) em tom profissional e encorajador.
-        Destaque como fotos geradas por IA podem resolver os desafios dele e elevar sua autoridade visual.
-        Use Markdown para formatação.
-      `;
-
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: prompt,
-      });
-
-      setDiagnosis(response.text || 'Não foi possível gerar seu diagnóstico no momento, mas estamos prontos para transformar sua imagem!');
-    } catch (error) {
-      console.error("Error generating diagnosis:", error);
-      setDiagnosis("Ocorreu um erro ao processar seu diagnóstico. Prossiga para ver como podemos ajudar!");
-    } finally {
+    
+    // Simular processamento da IA por 2 segundos
+    setTimeout(() => {
+      const firstName = answers.name.split(' ')[0];
+      const txt = `${firstName}, seu perfil para ${answers.objective.toLowerCase()} com estilo ${answers.style.toLowerCase()} tem tudo para se destacar visualmente. O Studio IA foi desenvolvido exatamente para transformar fotos comuns em imagens de alta performance — sem precisar de estúdio ou fotógrafo. Veja abaixo os resultados reais de clientes com o mesmo perfil que o seu.`;
+      
+      setDiagnosis(txt);
       setIsLoading(false);
-    }
+    }, 2000);
   };
 
   const handleLeadSubmit = (e: React.FormEvent) => {
