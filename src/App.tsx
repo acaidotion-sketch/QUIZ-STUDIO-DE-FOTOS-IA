@@ -35,6 +35,10 @@ interface QuizAnswers {
 
 const STEPS = 8;
 
+const CONFIG = {
+  FORMINIT_URL: "https://forminit.com/f/kicshnmjo2p"
+};
+
 export default function App() {
   const [step, setStep] = useState(1);
   const [answers, setAnswers] = useState<QuizAnswers>({
@@ -92,6 +96,21 @@ export default function App() {
   };
 
   const openPayment = () => {
+    const formData = new FormData();
+    formData.append("nome", answers.name);
+    formData.append("email", answers.email);
+    formData.append("whatsapp", answers.phone);
+    formData.append("objetivo", answers.objective);
+    formData.append("estilo", answers.style);
+    formData.append("frequencia", answers.frequency);
+    formData.append("origem", "Quiz Studio IA — Netlify");
+    formData.append("data", new Date().toLocaleString("pt-BR"));
+
+    fetch(CONFIG.FORMINIT_URL, {
+      method: "POST",
+      body: formData
+    }).catch(err => console.log("Forminit erro:", err));
+
     window.open('https://loja.infinitepay.io/fenixdigital/mav3162-studio-de-fotos-digital-online-ia', '_blank');
     setIsProcessingPayment(true);
   };
