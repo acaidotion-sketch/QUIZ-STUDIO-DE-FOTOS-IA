@@ -92,10 +92,23 @@ export default function App() {
 
   const handleLeadSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (typeof (window as any).fbq === 'function') {
+      (window as any).fbq('track', 'Lead', {
+        content_name: 'Quiz Studio IA',
+        status: 'Lead Captured'
+      });
+    }
     generateDiagnosis();
   };
 
   const openPayment = () => {
+    if (typeof (window as any).fbq === 'function') {
+      (window as any).fbq('track', 'InitiateCheckout', {
+        content_name: 'Studio de Fotos IA',
+        value: 47.00,
+        currency: 'BRL'
+      });
+    }
     const formData = new FormData();
     formData.append("nome", answers.name);
     formData.append("email", answers.email);
